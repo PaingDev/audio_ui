@@ -1,0 +1,88 @@
+.App nav {
+  border-bottom: 2px solid #C4C5C7;
+  padding-bottom: 0px;
+  padding-top: 0px;
+}
+
+.App .bg{
+  background: #F8F8FF;
+}
+
+.card {
+  margin: 10px;
+  /* border: 1px solid #C9CAD6; */
+  border: none;
+  border-radius: 2px;
+  font-size: 0.9em;
+}
+
+.card .border-select {
+  border: 2px solid #3478FC !important;
+  border-radius: 4px;
+}
+
+.card .border-default {
+  border: 2px solid #F8F8FF !important;
+  border-radius: 4px;
+}
+
+.card .left {
+  display: block;
+  float: left;
+  width: auto;
+}
+
+.card .right {
+  display: block;
+  float: right;
+  width: auto;
+  font-size: 0.8em;
+}
+
+.App .navbar-nav .active {
+  background: #F0F5FF;
+  border-bottom: 4px solid #3478FC;
+}
+
+#navbarSupportedContent>ul>li {
+  padding: 10px 15px 5px 15px;
+
+}
+
+bi:hover {
+  cursor: pointer;
+}
+
+.darkBlue {
+  background: #2A2E5D;
+}
+
+.darkBlue-text {
+  color: #2A2E5D;
+}
+
+
+#waveform {
+  position: relative;
+}
+
+#waveform .wavesurfer-spectrogram {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+#waveform .wavesurfer-spectrogram-labels {
+  position: absolute;
+  left: 0;
+  bottom: -1.5em;
+  width: 100%;
+  text-align: center;
+}
+
+#waveform .wavesurfer-spectrogram-labels-upper {
+  position: absolute;
+  left: -3em;
+  top: 0;
+  transform: rotate(-90deg);
+}
