@@ -3,7 +3,7 @@ import axios from "axios";
 
 
 class ApiService {
-    baseURL = "http://localhost:8080/api/v1";
+    baseURL = `//${window.location.host}/api/v1`;
 
     constructor(){
 
@@ -45,6 +45,12 @@ class ApiService {
         axios.put(this.baseURL + "/anomaly", anomalyObj).then(response => {
             callback(response);
         })
+    }
+
+    getAudioFile(url, callback){
+        axios.get(url, { responseType: 'blob' }).then(response=>{
+            callback(response)
+        });
     }
 }
 

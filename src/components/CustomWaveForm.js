@@ -8,7 +8,7 @@ let colormap = require('colormap')
 
 const CustomWaveForm = ({ loadUrl, id, play, current }) => {
     const waveformRef = useRef(null);
-    const baseClipUrl = "//localhost:8080"
+    //const baseClipUrl = `//${window.location.host}`
     const colors = colormap({
         colormap: 'temperature',
         nshades: 256,
@@ -27,7 +27,7 @@ const CustomWaveForm = ({ loadUrl, id, play, current }) => {
     useEffect(v => {
 
         if(waveformRef.current){
-            waveformRef.current.load(baseClipUrl + loadUrl);
+            waveformRef.current.load(loadUrl);
             if(play){
                 waveformRef.current.play();
                 waveformRef.current.seekTo(current / waveformRef.current.getDuration());
@@ -83,7 +83,7 @@ const CustomWaveForm = ({ loadUrl, id, play, current }) => {
         // remove click event listener
         //waveformRef.current.un('click', handleClick);
 
-        waveformRef.current.load(baseClipUrl + loadUrl);
+        waveformRef.current.load(loadUrl);
         waveformRef.current.on('ready', function () {
             if (play) {
                 console.log("Current", current);

@@ -22,6 +22,8 @@ function App() {
 
   const [anomalyCurrentTime, setAnomalyCurrentTime] = useState(0);
   const [normalCurrentTime, setNormalCurrentTime] = useState(0);
+  const [audioNormal, setAudioNormal] = useState(null);
+  const [audioAnomaly, setAudioAnomaly] = useState(null);
 
 
   const [listAction, setListAction] = useState([]);
@@ -53,22 +55,39 @@ function App() {
       let result = response.data.map(value => {
         return { label: value.reason, value: value.id }
       })
+      setSelectedReason(null);
       let selectedReason = result.find(value => { return value.value == selectedAnomaly?.reason?.id })
       setReasonList(result);
-      setSelectedReason({ ...selectedReason });
+      setSelectedReason(selectedReason);
     });
 
     apiService.getAction(response => {
       let result = response.data.map(value => {
         return { label: value.action, value: value.id }
       })
-
+      setSelectedAction(null);
       let selectedAction = result.find(value => { return value.value == selectedAnomaly?.action?.id })
       setListAction(result)
       setSelectedAction(selectedAction)
 
     });
+    setComment(selectedAnomaly?.comment??'');
 
+    if(selectedAnomaly){
+      apiService.getAudioFile(`//${window.location.host}` + selectedAnomaly.soundClipPath, response=>{
+        setAudioNormal(URL.createObjectURL(response.data));
+      });
+
+      apiService.getAudioFile(`//${window.location.host}` + selectedAnomaly.anomalySoundClipPath, response=>{
+        setAudioAnomaly(URL.createObjectURL(response.data));
+      });
+
+
+     
+    }
+
+    
+    
   }, [selectedAnomaly])
 
   const updateAnomaly = () => {
@@ -89,7 +108,7 @@ function App() {
       //reload anomaly list
       apiService.getAnomalyByMachine(machine?.value, response => {
         if (response.data.length > 0) {
-          setSelectedAnomaly(response.data[0]);
+          //setSelectedAnomaly(response.data[0]);
         }
         setListAnomaly(response.data);
       })
@@ -145,7 +164,7 @@ function App() {
                   {
                     listAnomaly.map((v, index) => {
                       return <div className={selectedAnomaly == v ? "row m-2 border border-select" : "row m-2 border "} key={index} onClick={e => {
-                        setSelectedAnomaly(v);
+                        setSelectedAnomaly({...v});
                       }}>
                         <div className='col-1'>
                           <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" className="bi bi-dot text-primary" viewBox="0 0 16 16">
@@ -190,18 +209,20 @@ function App() {
                     <div className='row'>
                       <div className='col'>
                         <div className='h5 text-secondary'>Anomaly Machine Output</div>
-                        <audio src={"//localhost:8080" + selectedAnomaly.soundClipPath} controls
+                        <audio src={audioAnomaly} controls
 
                           onPlay={e => {
                             setAnomalyPlay(true);
                             setAnomalyCurrentTime(e.target.currentTime);
                           }} onPause={v => setAnomalyPlay(false)}
                         ></audio>
-                        <CustomWaveForm id={1} loadUrl={selectedAnomaly.anomalySoundClipPath} play={anomalyPlay} current={anomalyCurrentTime} />
+                        {
+                          audioAnomaly && (<CustomWaveForm id={1} loadUrl={audioAnomaly} play={anomalyPlay} current={anomalyCurrentTime} />)
+                        }
                       </div>
                       <div className='col'>
                         <div className='h5 text-secondary'>Normal Machine Output</div>
-                        <audio src={"//localhost:8080" + selectedAnomaly.anomalySoundClipPath}
+                        <audio src={audioNormal}
                           controls
 
                           onPlay={e => {
@@ -209,7 +230,10 @@ function App() {
                             setNormalCurrentTime(e.target.currentTime);
                           }} onPause={v => setNormalPlay(false)}
                         ></audio>
-                        <CustomWaveForm id={2} loadUrl={selectedAnomaly.soundClipPath} play={normalPlay} current={normalCurrentTime} />
+                        {
+                          audioNormal && (<CustomWaveForm id={2} loadUrl={audioNormal} play={normalPlay} current={normalCurrentTime} />)
+                        }
+                        
                       </div>
 
                     </div>
